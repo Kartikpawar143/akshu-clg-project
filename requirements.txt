@@ -1,0 +1,6 @@
+# The included SavedModel uses the legacy Keras format. Keep TensorFlow on
+# Keras 2, which can load it with tensorflow.keras.models.load_model().
+tensorflow==2.15.1
+mediapipe==0.10.10
+opencv-contrib-python==4.9.0.80
+numpy<2

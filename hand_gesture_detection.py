@@ -25,10 +25,19 @@ print(classNames)
 
 # Initialize the webcam
 cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    hands.close()
+    raise SystemExit(
+        "Could not open camera 0. This app needs a webcam attached to the machine; "
+        "a typical headless EC2 instance has no camera."
+    )
 
 while True:
     # Read each frame from the webcam
-    _, frame = cap.read()
+    success, frame = cap.read()
+    if not success or frame is None:
+        print("Camera stopped providing frames; exiting.")
+        break
 
     x, y, c = frame.shape
 
