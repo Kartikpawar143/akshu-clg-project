@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import mediapipe as mp
 import tensorflow as tf
-from tensorflow.keras.models import load_model
+from pathlib import Path
 
 # initialize mediapipe
 mpHands = mp.solutions.hands
@@ -14,12 +14,14 @@ hands = mpHands.Hands(max_num_hands=1, min_detection_confidence=0.7)
 mpDraw = mp.solutions.drawing_utils
 
 # Load the gesture recognizer model
-model = load_model('mp_hand_gesture')
+project_dir = Path(__file__).resolve().parent
+loaded_model = tf.saved_model.load(str(project_dir / 'mp_hand_gesture'))
+infer = loaded_model.signatures['serving_default']
+input_name = next(iter(infer.structured_input_signature[1]))
 
 # Load class names
-f = open('gesture.names', 'r')
-classNames = f.read().split('\n')
-f.close()
+with (project_dir / 'gesture.names').open('r', encoding='utf-8') as f:
+    classNames = f.read().splitlines()
 print(classNames)
 
 
@@ -67,8 +69,10 @@ while True:
             mpDraw.draw_landmarks(frame, handslms, mpHands.HAND_CONNECTIONS)
 
             # Predict gesture
-            prediction = model.predict([landmarks])
-            # print(prediction)
+            outputs = infer(**{
+                input_name: tf.convert_to_tensor([landmarks], dtype=tf.float32)
+            })
+            prediction = next(iter(outputs.values())).numpy()
             classID = np.argmax(prediction)
             className = classNames[classID]
 
