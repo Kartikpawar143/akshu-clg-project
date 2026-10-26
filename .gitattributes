@@ -1,0 +1,5 @@
+# Preserve serialized model and training data bytes across Windows checkouts.
+*.pb binary
+*.pickle binary
+*.index binary
+*.data-* binary
