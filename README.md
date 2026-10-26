@@ -32,3 +32,8 @@ Install 64-bit Python 3.11 and enable the Python Launcher during installation.
 Then double-click `setup.bat` from File Explorer. It creates a Windows virtual
 environment, installs the dependencies, and starts the webcam app. Allow camera
 access if Windows asks.
+
+When you are finished and want to reclaim the environment's disk space,
+double-click `cleanup.bat`. It removes the project's virtual environments and
+installed packages while keeping the source code and model. Run `setup.bat`
+again before using the app afterward.
